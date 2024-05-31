@@ -6,7 +6,7 @@ name: Build and deploy dotnet core project to Azure Function App - blend-tracker
 on:
   push:
     branches:
-      - deployment
+      - main
   workflow_dispatch:
 
 env:

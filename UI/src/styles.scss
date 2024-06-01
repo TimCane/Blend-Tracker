@@ -1,0 +1,31 @@
+@import '@fontsource/lustria';
+@import '@fontsource/lato';
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --foreground: #1a1105;
+        --background: #fefdfb;
+        --primary: #d58e2a;
+        --secondary: #84e6d6;
+        --accent: #64e4a2;
+    }
+
+    .dark {
+        --foreground: #faf1e5;
+        --background: #040301;
+        --primary: #d58e2a;
+        --secondary: #197b6a;
+        --accent: #1c9c5a;
+    }
+}
+
+@layer base {
+    h1,h2,h3,h4,h5,h6 {
+        @apply font-heading;
+    }
+}

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -7,6 +8,9 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Azure.Cosmos;
 using ServerlessFunctions.Models.Documents;
+using Azure.Core;
+using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
 
 namespace ServerlessFunctions.Functions.Http
 {
@@ -21,24 +25,30 @@ namespace ServerlessFunctions.Functions.Http
 
         [Function(nameof(Authenticate))]
         public async Task<AuthenticateOutput> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
-            [CosmosDBInput(Constants.CosmosNoSql.BlendDatabase, Constants.CosmosNoSql.UsersContainer, Connection = Constants.CosmosNoSql.Connection)] Container container)
+            [CosmosDBInput(Constants.CosmosNoSql.BlendDatabase, Connection = Constants.CosmosNoSql.Connection)] Database database)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            string bearerToken = req.Headers.Authorization.ToString();
+            var authorization = req.Headers[HeaderNames.Authorization];
 
-            if (string.IsNullOrEmpty(bearerToken))
+            if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             {
                 return new AuthenticateOutput(new UnauthorizedResult());
             }
 
-            var user = await GetUser(bearerToken);
+            if (string.IsNullOrEmpty(headerValue.Parameter))
+            {
+                return new AuthenticateOutput(new UnauthorizedResult());
+            }
+
+            var user = await GetUser(headerValue.Parameter);
             if (user == null)
             {
                 return new AuthenticateOutput(new UnauthorizedResult());
             }
 
-            var dbUser = container.GetItemLinqQueryable<UserDocument>(true).AsEnumerable().FirstOrDefault(u => u.Id == user.Id);
+            var userContainer = database.GetContainer(Constants.CosmosNoSql.UsersContainer);
+            var dbUser = userContainer.GetItemLinqQueryable<UserDocument>(true).AsEnumerable().FirstOrDefault(u => u.Id == user.Id);
             if (dbUser == null)
             {
                 return new AuthenticateOutput(new UnauthorizedResult());
@@ -57,13 +67,24 @@ namespace ServerlessFunctions.Functions.Http
 
             var option = new CookieOptions
             {
-                Expires = DateTime.Now.AddHours(1),
-                HttpOnly = true
+                Expires = DateTime.Now.AddHours(5),
+                HttpOnly = false,
             };
-            req.HttpContext.Response.Cookies.Delete(Constants.Cookie.Authentication);
-            req.HttpContext.Response.Cookies.Append(Constants.Cookie.Authentication, bearerToken, option);
 
-            return new AuthenticateOutput(new UnauthorizedResult(), dbUser, new ProcessBlendPlaylistMessage() { BearerToken = bearerToken });
+            req.HttpContext.Response.Cookies.Append(Constants.Cookie.Authentication, headerValue.Parameter, option);
+
+            var processRequestsContainer = database.GetContainer(Constants.CosmosNoSql.ProcessRequestsContainer);
+            var hasBeenProcessed = processRequestsContainer.GetItemLinqQueryable<ProcessRequestDocument>(true).AsEnumerable()
+                .Any(u => u.Date == DateTime.Now.Date);
+
+            ProcessBlendPlaylistMessage? message = null;
+            if (!hasBeenProcessed)
+            {
+                message = new ProcessBlendPlaylistMessage() { BearerToken = headerValue.Parameter, UserId = dbUser.Id };
+            }
+
+
+            return new AuthenticateOutput(new UnauthorizedResult() , dbUser, message);
         }
 
 
@@ -78,7 +99,7 @@ namespace ServerlessFunctions.Functions.Http
             {
                 RequestUri = new Uri(url),
                 Method = HttpMethod.Get,
-                Headers = { { "Authorization", $"{bearerToken}" } },
+                Headers = { { "Authorization", $"Bearer {bearerToken}" } },
             };
 
 

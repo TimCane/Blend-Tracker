@@ -8,6 +8,7 @@
             public const string BlendDatabase = "Blend";
             public const string SongsContainer = "Songs";
             public const string UsersContainer = "Users";
+            public const string ProcessRequestsContainer = "ProcessRequests";
         }
 
         public class ServiceBus

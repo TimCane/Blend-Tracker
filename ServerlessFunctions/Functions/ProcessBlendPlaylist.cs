@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -57,7 +58,7 @@ namespace ServerlessFunctions.Functions
             }
 
 
-            return new ProcessBlendPlaylistOutput([.. messages]);
+            return new ProcessBlendPlaylistOutput([.. messages], new ProcessRequestDocument(){Date = DateTime.Now.Date, Id = Guid.NewGuid().ToString(), UserId = message.UserId});
         }
 
         private static async Task<List<BlendPlaylistItem>> GetBlendPlaylistItems(string bearerToken)
@@ -71,7 +72,7 @@ namespace ServerlessFunctions.Functions
             {
                 RequestUri = new Uri(url),
                 Method = HttpMethod.Get,
-                Headers = { { "Authorization", $"{bearerToken}" } },
+                Headers = { { "Authorization", $"Bearer {bearerToken}" } },
             };
 
 
@@ -155,10 +156,13 @@ namespace ServerlessFunctions.Functions
             public string Id { get; set; }
         }
 
-        public class ProcessBlendPlaylistOutput(ProcessBlendSongMessage[] processBlendSongMessages)
+        public class ProcessBlendPlaylistOutput(ProcessBlendSongMessage[] processBlendSongMessages, ProcessRequestDocument document = null)
         {
             [ServiceBusOutput(Constants.ServiceBus.ProcessBlendSongQueue, Connection = Constants.ServiceBus.Connection)]
             public ProcessBlendSongMessage[] ProcessBlendSongMessages { get; set; } = processBlendSongMessages;
+
+            [CosmosDBOutput(Constants.CosmosNoSql.BlendDatabase, Constants.CosmosNoSql.ProcessRequestsContainer, Connection = Constants.CosmosNoSql.Connection, CreateIfNotExists = true)]
+            public ProcessRequestDocument Document { get; set; } = document;
         }
     }
 }

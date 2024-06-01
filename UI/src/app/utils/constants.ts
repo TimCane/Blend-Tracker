@@ -1,0 +1,1 @@
+export const SpotifyAuthStateKey: string = "spotify_auth_state";

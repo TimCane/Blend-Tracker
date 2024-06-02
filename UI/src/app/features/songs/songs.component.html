@@ -1,0 +1,49 @@
+<div *ngIf="{
+    songs: songs$ | async,
+  } as state">
+
+    <div class="p-4 flex justify-center">
+        <div class="bg-background-100 p-4 mx-auto">
+
+            <table class="text-left" *ngIf="state.songs as songs">
+                <thead>
+                    <th class="px-2"></th>
+                    <th class="px-2">Title</th>
+                    <th class="px-2">Album</th>
+                    <th class="px-2">Added By</th>
+                    <th class="px-2">Duration</th>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-primary-200 hover:bg-background-200" *ngFor="let song of songs">
+                        <td class="px-2 py-1"><img class="rounded" [src]="song.album.image"
+                                [alt]="'Album art for ' + song.album.name" width="100px"></td>
+                        <td class="px-2 py-1">
+                            <div class="text-xl">
+                                <a target="_blank"
+                                    [href]="'https://open.spotify.com/track/' + song.id">{{song.title}}</a>
+                            </div>
+                            <div class="flex gap-1">
+                                <span class="artist" *ngFor="let artist of song.artists">
+                                    <a target="_blank"
+                                        [href]="'https://open.spotify.com/artist/' + artist.id">{{artist.name}}</a>
+                                </span>
+                            </div>
+
+                        </td>
+                        <td class="px-2 py-1">
+                            <a target="_blank"
+                                [href]="'https://open.spotify.com/album/' + song.album.id">{{song.album.name}}</a>
+
+
+                        </td>
+                        <td class="px-2 py-1"><span *ngFor="let addedBy of song.addedBy">{{addedBy.id}}</span></td>
+                        <td class="px-2 py-1">{{song.duration | duration}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>

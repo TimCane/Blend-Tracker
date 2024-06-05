@@ -20,8 +20,7 @@ namespace ServerlessFunctions.Functions
                 songDocument = new SongDocument
                 {
                     Id = message.Id,
-                    FirstSeen = DateTime.UtcNow,
-                    LastSeen = DateTime.UtcNow,
+                    SeenOn = new List<DateTime>(),
                     Duration = message.Duration,
                     Title = message.Title,
                     Explicit = message.Explicit,
@@ -30,10 +29,8 @@ namespace ServerlessFunctions.Functions
                     AddedBy = new List<AddedBy>()
                 };
             }
-            else
-            {
-                songDocument.LastSeen = DateTime.UtcNow;
-            }
+
+            songDocument.SeenOn.Add(DateTime.UtcNow);
 
             if (songDocument.AddedBy.All(by => by.Id != message.AddedBy.Id))
             {

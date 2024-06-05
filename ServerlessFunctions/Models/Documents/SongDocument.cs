@@ -17,8 +17,7 @@ namespace ServerlessFunctions.Models.Documents
 
         public int Duration { get; set; }
 
-        public DateTime FirstSeen { get; set; }
-        public DateTime LastSeen { get; set; }
+        public List<DateTime> SeenOn { get; set; }
     }
 
     public class AddedBy

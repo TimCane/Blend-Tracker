@@ -11,7 +11,7 @@ namespace ServerlessFunctions.Functions
     public class ProcessBlendPlaylist(ILogger<ProcessBlendPlaylist> logger)
     {
         private static readonly string
-            PlaylistId = Environment.GetEnvironmentVariable("Spotify_PlaylistId") ?? string.Empty;
+            PlaylistId = Environment.GetEnvironmentVariable("Spotify_BlendPlaylistId") ?? string.Empty;
 
         private const string Market = "GB";
         private const string Fields = "items(added_by.id%2Ctrack(id%2Cname%2Cexplicit%2Cduration_ms%2Cartists(id%2Cname)%2Calbum(name%2Cid%2Cimages(url,width))))";

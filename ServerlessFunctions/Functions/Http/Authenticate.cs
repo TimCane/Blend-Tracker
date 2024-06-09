@@ -68,10 +68,10 @@ namespace ServerlessFunctions.Functions.Http
             var option = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(5),
-                HttpOnly = false,
+                HttpOnly = true,
             };
 
-            req.HttpContext.Response.Cookies.Append(Constants.Cookie.Authentication, headerValue.Parameter, option);
+            req.HttpContext.Response.Cookies.Append(Constants.Cookie.Authentication, dbUser.Id, option);
 
             var processRequestsContainer = database.GetContainer(Constants.CosmosNoSql.ProcessRequestsContainer);
             var hasBeenProcessed = processRequestsContainer.GetItemLinqQueryable<ProcessRequestDocument>(true).AsEnumerable()

@@ -8,24 +8,146 @@
 
 @layer base {
     :root {
-        --foreground: #1a1105;
-        --background: #fefdfb;
-        --primary: #d58e2a;
-        --secondary: #84e6d6;
-        --accent: #64e4a2;
+      --text-50: #edf7f7;
+      --text-100: #dceeef;
+      --text-200: #b8dde0;
+      --text-300: #95ccd0;
+      --text-400: #71bbc1;
+      --text-500: #4eabb1;
+      --text-600: #3e888e;
+      --text-700: #2f666a;
+      --text-800: #1f4447;
+      --text-900: #102223;
+      --text-950: #081112;
+      
+      --background-50: #edf7f8;
+      --background-100: #dbeef0;
+      --background-200: #b7dee1;
+      --background-300: #92cdd3;
+      --background-400: #6ebdc4;
+      --background-500: #4aacb5;
+      --background-600: #3b8a91;
+      --background-700: #2c676d;
+      --background-800: #1e4548;
+      --background-900: #0f2224;
+      --background-950: #071112;
+      
+      --primary-50: #edf6f7;
+      --primary-100: #dbeef0;
+      --primary-200: #b7dce1;
+      --primary-300: #93cbd2;
+      --primary-400: #6fb9c3;
+      --primary-500: #4ba8b4;
+      --primary-600: #3c8690;
+      --primary-700: #2d656c;
+      --primary-800: #1e4348;
+      --primary-900: #0f2224;
+      --primary-950: #081112;
+      
+      --secondary-50: #f3edf7;
+      --secondary-100: #e8dbf0;
+      --secondary-200: #d1b7e1;
+      --secondary-300: #ba93d2;
+      --secondary-400: #a36fc3;
+      --secondary-500: #8c4bb4;
+      --secondary-600: #703c90;
+      --secondary-700: #542d6c;
+      --secondary-800: #381e48;
+      --secondary-900: #1c0f24;
+      --secondary-950: #0e0812;
+      
+      --accent-50: #f7edf6;
+      --accent-100: #f0dbec;
+      --accent-200: #e1b7d9;
+      --accent-300: #d293c6;
+      --accent-400: #c36fb3;
+      --accent-500: #b44ba1;
+      --accent-600: #903c80;
+      --accent-700: #6c2d60;
+      --accent-800: #481e40;
+      --accent-900: #240f20;
+      --accent-950: #120810;
+      
     }
-
     .dark {
-        --foreground: #faf1e5;
-        --background: #040301;
-        --primary: #d58e2a;
-        --secondary: #197b6a;
-        --accent: #1c9c5a;
+      --text-50: #081112;
+      --text-100: #102223;
+      --text-200: #1f4447;
+      --text-300: #2f666a;
+      --text-400: #3e888e;
+      --text-500: #4eabb1;
+      --text-600: #71bbc1;
+      --text-700: #95ccd0;
+      --text-800: #b8dde0;
+      --text-900: #dceeef;
+      --text-950: #edf7f7;
+      
+      --background-50: #071112;
+      --background-100: #0f2224;
+      --background-200: #1e4548;
+      --background-300: #2c676d;
+      --background-400: #3b8a91;
+      --background-500: #4aacb5;
+      --background-600: #6ebdc4;
+      --background-700: #92cdd3;
+      --background-800: #b7dee1;
+      --background-900: #dbeef0;
+      --background-950: #edf7f8;
+      
+      --primary-50: #081112;
+      --primary-100: #0f2224;
+      --primary-200: #1e4348;
+      --primary-300: #2d656c;
+      --primary-400: #3c8690;
+      --primary-500: #4ba8b4;
+      --primary-600: #6fb9c3;
+      --primary-700: #93cbd2;
+      --primary-800: #b7dce1;
+      --primary-900: #dbeef0;
+      --primary-950: #edf6f7;
+      
+      --secondary-50: #0e0812;
+      --secondary-100: #1c0f24;
+      --secondary-200: #381e48;
+      --secondary-300: #542d6c;
+      --secondary-400: #703c90;
+      --secondary-500: #8c4bb4;
+      --secondary-600: #a36fc3;
+      --secondary-700: #ba93d2;
+      --secondary-800: #d1b7e1;
+      --secondary-900: #e8dbf0;
+      --secondary-950: #f3edf7;
+      
+      --accent-50: #120810;
+      --accent-100: #240f20;
+      --accent-200: #481e40;
+      --accent-300: #6c2d60;
+      --accent-400: #903c80;
+      --accent-500: #b44ba1;
+      --accent-600: #c36fb3;
+      --accent-700: #d293c6;
+      --accent-800: #e1b7d9;
+      --accent-900: #f0dbec;
+      --accent-950: #f7edf6;
+      
     }
-}
+  }  
+
+
 
 @layer base {
-    h1,h2,h3,h4,h5,h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply font-heading;
+    }
+
+
+    a:hover{
+        @apply underline text-secondary-500
     }
 }
